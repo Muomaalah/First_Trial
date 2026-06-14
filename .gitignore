@@ -7,3 +7,6 @@ skills-lock.json
 node_modules/
 **/.hyperframes/
 *.log
+
+# Render outputs (large + reproducible via `npx hyperframes render`; delivered via chat)
+**/renders/

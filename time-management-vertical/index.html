@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
-    <title>Time Management — Narrated</title>
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Time Management — Vertical</title>
     <script src="vendor/gsap.min.js"></script>
     <style>
       @font-face {
@@ -15,86 +15,81 @@
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body {
-        width: 1920px; height: 1080px; overflow: hidden;
+        width: 1080px; height: 1920px; overflow: hidden;
         background-color: #08080a;
         font-family: "Inter", sans-serif; color: #f5f5f2;
       }
 
-      /* ---------------- scenes ---------------- */
       .scene { position: absolute; inset: 0; z-index: 5; opacity: 0; }
       #s1 { opacity: 1; }
 
       .bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #0c0c10; }
-      .bg img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); }
+      .bg img { width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.08); }
       .bg.illo { display: flex; align-items: center; justify-content: center;
-        background: radial-gradient(circle at 50% 42%, #16161c 0%, #0a0a0d 70%); }
+        background: radial-gradient(circle at 50% 40%, #16161c 0%, #0a0a0d 72%); }
 
       .scrim { position: absolute; inset: 0; z-index: 2;
         background:
-          linear-gradient(180deg, rgba(8,8,10,0.50) 0%, rgba(8,8,10,0.28) 38%, rgba(8,8,10,0.86) 100%),
-          linear-gradient(90deg, rgba(8,8,10,0.78) 0%, rgba(8,8,10,0.30) 52%, rgba(8,8,10,0.50) 100%); }
+          linear-gradient(180deg, rgba(8,8,10,0.62) 0%, rgba(8,8,10,0.20) 30%, rgba(8,8,10,0.45) 60%, rgba(8,8,10,0.92) 100%); }
       .scrim.soft {
         background:
-          linear-gradient(180deg, rgba(8,8,10,0.35) 0%, rgba(8,8,10,0.15) 40%, rgba(8,8,10,0.70) 100%); }
+          linear-gradient(180deg, rgba(8,8,10,0.45) 0%, rgba(8,8,10,0.12) 38%, rgba(8,8,10,0.80) 100%); }
 
       .content {
         position: absolute; inset: 0; z-index: 3;
         display: flex; flex-direction: column; justify-content: center;
-        padding: 96px 130px 150px 130px; gap: 12px; max-width: 1500px; }
+        padding: 200px 72px 470px 72px; gap: 14px; }
 
       .tag { display: flex; align-items: center; gap: 16px; margin-bottom: 14px;
-        font-size: 24px; font-weight: 700; letter-spacing: 0.34em; text-transform: uppercase;
+        font-size: 25px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase;
         color: #ffd60a; opacity: 0; transform: translateY(16px); }
-      .tag i { display: inline-block; width: 54px; height: 3px; background: #ffd60a; transform: scaleX(0); transform-origin: left; }
+      .tag i { display: inline-block; width: 50px; height: 3px; background: #ffd60a; transform: scaleX(0); transform-origin: left; }
 
-      .line { font-family: "Inter", sans-serif; font-weight: 700; font-size: 60px; line-height: 1.08;
-        letter-spacing: -0.01em; opacity: 0; transform: translateY(34px);
-        text-shadow: 0 4px 26px rgba(0,0,0,0.6); max-width: 1180px; }
-      .line.sm { font-size: 46px; font-weight: 600; }
-      .line.muted { color: #b9b9bf; font-weight: 600; }
+      .line { font-family: "Inter", sans-serif; font-weight: 700; font-size: 56px; line-height: 1.1;
+        letter-spacing: -0.01em; opacity: 0; transform: translateY(32px);
+        text-shadow: 0 4px 24px rgba(0,0,0,0.6); max-width: 940px; }
+      .line.sm { font-size: 44px; font-weight: 600; }
+      .line.muted { color: #c0c0c6; font-weight: 600; }
       .line em { font-style: normal; color: #ffd60a; }
       .line .red { font-style: normal; color: #ff3b30; }
-      .line .strike { position: relative; color: #b9b9bf; }
+      .line .strike { position: relative; color: #c0c0c6; }
       .line .strike::after { content: ""; position: absolute; left: -3px; right: -3px; top: 53%;
         height: 6px; background: #ff3b30; transform: rotate(-2.5deg); }
 
-      .hero { font-family: "Anton", sans-serif; font-size: 168px; line-height: 0.9;
-        text-transform: uppercase; color: #ffd60a; letter-spacing: 0.01em; margin-top: 6px;
-        opacity: 0; transform: scale(0.6); text-shadow: 0 8px 40px rgba(0,0,0,0.55); max-width: 1320px; }
+      .hero { font-family: "Anton", sans-serif; font-size: 132px; line-height: 0.9;
+        text-transform: uppercase; color: #ffd60a; letter-spacing: 0.01em; margin-top: 8px;
+        opacity: 0; transform: scale(0.6); text-shadow: 0 8px 38px rgba(0,0,0,0.55); max-width: 940px; }
       .hero.white { color: #f5f5f2; }
-      .hero.sm { font-size: 132px; }
+      .hero.sm { font-size: 112px; }
 
-      .cta { font-family: "Anton", sans-serif; font-size: 120px; line-height: 1;
-        text-transform: uppercase; color: #f5f5f2; margin-top: 16px;
-        opacity: 0; transform: translateY(40px); text-shadow: 0 8px 40px rgba(0,0,0,0.55); }
+      .cta { font-family: "Anton", sans-serif; font-size: 104px; line-height: 1;
+        text-transform: uppercase; color: #f5f5f2; margin-top: 18px;
+        opacity: 0; transform: translateY(40px); text-shadow: 0 8px 38px rgba(0,0,0,0.55); }
       .cta .dot { color: #ffd60a; }
 
-      /* ---------------- SVG illustrations ---------------- */
-      .illo-clock { width: 620px; height: 620px; filter: drop-shadow(0 0 50px rgba(255,214,10,0.15)); opacity: 0.95; }
-      .illo-chess { height: 660px; filter: drop-shadow(0 0 55px rgba(255,214,10,0.22)); }
+      .illo-clock { width: 760px; height: 760px; filter: drop-shadow(0 0 50px rgba(255,214,10,0.15)); opacity: 0.95; }
+      .illo-chess { height: 820px; filter: drop-shadow(0 0 55px rgba(255,214,10,0.22)); }
 
-      /* ---------------- persistent HUD + avatar ---------------- */
-      .hud { position: absolute; top: 56px; left: 130px; z-index: 30;
+      .hud { position: absolute; top: 66px; left: 72px; z-index: 30;
         display: flex; align-items: center; gap: 14px; opacity: 0; }
       .hud .dot { width: 12px; height: 12px; border-radius: 50%; background: #ffd60a; }
-      .hud span { font-size: 22px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; color: #f5f5f2; }
+      .hud span { font-size: 24px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #f5f5f2; }
       .hud span b { color: #ffd60a; font-weight: 700; }
 
-      .presenter { position: absolute; left: 96px; bottom: 70px; z-index: 32;
-        display: flex; align-items: flex-end; gap: 18px; opacity: 0; }
-      .av-frame { position: relative; width: 200px; height: 200px; border-radius: 26px;
+      .presenter { position: absolute; left: 64px; bottom: 96px; z-index: 32;
+        display: flex; align-items: flex-end; gap: 20px; opacity: 0; }
+      .av-frame { position: relative; width: 220px; height: 220px; border-radius: 30px;
         background: linear-gradient(160deg, #1b1b22 0%, #101015 100%);
         border: 2px solid rgba(255,214,10,0.5); box-shadow: 0 18px 50px rgba(0,0,0,0.5); overflow: hidden; }
       .av-frame::after { content: ""; position: absolute; inset: 0;
         background: radial-gradient(circle at 50% 120%, rgba(255,214,10,0.18), transparent 60%); }
-      .avatar-svg { position: absolute; left: 50%; bottom: -6px; width: 188px; transform: translateX(-50%); }
-      .av-tag { display: flex; flex-direction: column; gap: 6px; padding-bottom: 14px; }
-      .av-tag .nm { font-family: "Anton", sans-serif; font-size: 34px; letter-spacing: 0.01em; text-transform: uppercase; color: #f5f5f2; line-height: 0.95; }
-      .av-tag .rl { font-size: 18px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #ffd60a; }
-      .av-live { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; letter-spacing: 0.18em; color: #ff3b30; }
-      .av-live i { width: 9px; height: 9px; border-radius: 50%; background: #ff3b30; }
+      .avatar-svg { position: absolute; left: 50%; bottom: -6px; width: 206px; transform: translateX(-50%); }
+      .av-tag { display: flex; flex-direction: column; gap: 7px; padding-bottom: 18px; }
+      .av-tag .nm { font-family: "Anton", sans-serif; font-size: 40px; letter-spacing: 0.01em; text-transform: uppercase; color: #f5f5f2; line-height: 0.95; }
+      .av-tag .rl { font-size: 20px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #ffd60a; }
+      .av-live { display: inline-flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; letter-spacing: 0.16em; color: #ff3b30; }
+      .av-live i { width: 10px; height: 10px; border-radius: 50%; background: #ff3b30; }
 
-      /* ---------------- transition + overlays ---------------- */
       #wipe { position: absolute; inset: 0; background: #ffd60a; z-index: 50; pointer-events: none; }
       #grain { position: absolute; inset: 0; z-index: 55; opacity: 0.05; pointer-events: none;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
@@ -102,9 +97,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="43.5" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="43.5" data-width="1080" data-height="1920">
 
-      <!-- ============ SCENE 1 — HOOK (photo: hourglass) ============ -->
       <section id="s1" class="scene">
         <div class="bg" data-layout-allow-overflow><img src="assets/s1-hourglass.jpg" alt="" /></div>
         <div class="scrim"></div>
@@ -116,7 +110,6 @@
         </div>
       </section>
 
-      <!-- ============ SCENE 2 — 24 HOURS (SVG clock) ============ -->
       <section id="s2" class="scene">
         <div class="bg illo">
           <svg class="illo-clock" viewBox="0 0 200 200">
@@ -139,19 +132,17 @@
         </div>
       </section>
 
-      <!-- ============ SCENE 3 — EMPIRES (photo: skyline) ============ -->
       <section id="s3" class="scene">
         <div class="bg" data-layout-allow-overflow><img src="assets/s2-skyline.jpg" alt="" /></div>
         <div class="scrim"></div>
         <div class="content">
-          <div class="tag"><i></i>03 — Same Hours, Different Lives</div>
+          <div class="tag"><i></i>03 — Different Lives</div>
           <div class="line sm">Some people build</div>
           <div class="hero">Empires.</div>
           <div class="line muted">Others can't find <span class="strike">ten minutes</span>.</div>
         </div>
       </section>
 
-      <!-- ============ SCENE 4 — SPENT / AUTOPILOT (photo: busy desks) ============ -->
       <section id="s4" class="scene">
         <div class="bg" data-layout-allow-overflow><img src="assets/s3-busy.jpg" alt="" /></div>
         <div class="scrim"></div>
@@ -159,11 +150,10 @@
           <div class="tag"><i></i>04 — The Hard Truth</div>
           <div class="line sm">Time isn't <span class="strike">managed</span>.</div>
           <div class="hero">It's Spent.</div>
-          <div class="line muted">And most of us spend it on autopilot.</div>
+          <div class="line muted">Most of us spend it on autopilot.</div>
         </div>
       </section>
 
-      <!-- ============ SCENE 5 — THE TRADE (photo: phone) ============ -->
       <section id="s5" class="scene">
         <div class="bg" data-layout-allow-overflow><img src="assets/s4-phone.jpg" alt="" /></div>
         <div class="scrim"></div>
@@ -176,7 +166,6 @@
         </div>
       </section>
 
-      <!-- ============ SCENE 6 — PROTECT (photo: mountains) ============ -->
       <section id="s6" class="scene">
         <div class="bg" data-layout-allow-overflow><img src="assets/s5-mountains.jpg" alt="" /></div>
         <div class="scrim"></div>
@@ -188,7 +177,6 @@
         </div>
       </section>
 
-      <!-- ============ SCENE 7 — CLOSE (SVG chess) ============ -->
       <section id="s7" class="scene">
         <div class="bg illo">
           <svg class="illo-chess" viewBox="0 0 120 200">
@@ -209,10 +197,8 @@
         </div>
       </section>
 
-      <!-- ============ persistent HUD ============ -->
-      <div class="hud"><span class="dot"></span><span>The Productivity Guy &nbsp;<b>/ TIME</b></span></div>
+      <div class="hud"><span class="dot"></span><span>Productivity Guy &nbsp;<b>/ TIME</b></span></div>
 
-      <!-- ============ persistent avatar presenter ============ -->
       <div class="presenter">
         <div class="av-frame" data-layout-allow-overflow>
           <svg class="avatar-svg" viewBox="0 0 200 210">
@@ -245,12 +231,10 @@
         </div>
       </div>
 
-      <!-- ============ transition + overlays ============ -->
       <div id="wipe"></div>
       <div id="grain"></div>
       <div id="blackout"></div>
 
-      <!-- ============ audio ============ -->
       <audio id="vo" src="assets/narration.wav" data-start="0" data-duration="43.5" data-track-index="8" data-volume="1"></audio>
       <audio id="bgm" src="assets/music.mp3" data-start="0" data-duration="43.5" data-track-index="9" data-volume="0.15"></audio>
 
@@ -258,7 +242,6 @@
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        /* ---------- transition helper (wipe lands in the VO silence gap) ---------- */
         function transition(t, fromSel, toSel, color) {
           tl.fromTo("#wipe", { xPercent: -100, backgroundColor: color },
             { xPercent: 0, duration: 0.26, ease: "power3.in", overwrite: "auto" }, t);
@@ -266,89 +249,76 @@
           tl.set(toSel, { opacity: 1 }, t + 0.26);
           tl.to("#wipe", { xPercent: 100, duration: 0.32, ease: "power3.out", overwrite: "auto" }, t + 0.28);
         }
-        /* ---------- per-scene tag + ken-burns helper ---------- */
         function tagIn(id, t) {
           tl.to(`${id} .tag`, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t);
           tl.to(`${id} .tag i`, { scaleX: 1, duration: 0.5, ease: "power2.out" }, t + 0.1);
         }
         function kenBurns(id, t, dur) {
-          tl.fromTo(`${id} .bg img`, { scale: 1.06, x: 0 }, { scale: 1.16, x: -26, duration: dur, ease: "sine.inOut" }, t);
+          tl.fromTo(`${id} .bg img`, { scale: 1.08, y: 0 }, { scale: 1.18, y: -24, duration: dur, ease: "sine.inOut" }, t);
         }
 
-        /* ---------- persistent HUD + avatar ---------- */
         tl.to(".hud", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.3);
         tl.fromTo(".presenter", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.5)" }, 0.4);
-        // talking mouth (continuous over the narration, ~42s)
         tl.to(".av-mouth", { attr: { ry: 2.4 }, duration: 0.12, yoyo: true, repeat: 349, ease: "sine.inOut" }, 0.6);
-        // blinks (keyframes close+open, then pause)
         tl.to(".av-eye", { keyframes: [ { attr: { ry: 1 }, duration: 0.08 }, { attr: { ry: 8 }, duration: 0.08 } ], repeat: 13, repeatDelay: 2.6, ease: "none" }, 1.6);
-        // gentle head bob
         tl.to(".av-head", { y: -3, rotation: 1.1, svgOrigin: "100 138", duration: 1.7, yoyo: true, repeat: 24, ease: "sine.inOut" }, 0.6);
-        // live dot pulse
         tl.to(".av-live i", { opacity: 0.25, duration: 0.6, yoyo: true, repeat: 69, ease: "sine.inOut" }, 0.6);
 
-        /* ================= SCENE 1 — VO 0.5–4.17 ================= */
+        /* SCENE 1 — VO 0.5–4.17 */
         kenBurns("#s1", 0, 6.6);
         tagIn("#s1", 0.3);
         tl.to("#s1 .line.sm", { opacity: 1, y: 0, stagger: 0.42, duration: 0.5, ease: "power3.out" }, 0.7);
         tl.to("#s1 .hero", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 2.55);
-
         transition(4.25, "#s1", "#s2", "#ffd60a");
 
-        /* ================= SCENE 2 — VO 4.62–7.39 ================= */
+        /* SCENE 2 — VO 4.62–7.39 */
         tagIn("#s2", 4.7);
         tl.fromTo("#s2 .clk-min", { rotation: -20 }, { rotation: 700, svgOrigin: "100 100", duration: 2.9, ease: "power1.inOut" }, 4.6);
         tl.fromTo("#s2 .clk-hour", { rotation: -10 }, { rotation: 120, svgOrigin: "100 100", duration: 2.9, ease: "power1.inOut" }, 4.6);
         tl.fromTo("#s2 .illo-clock", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 0.95, duration: 0.7, ease: "back.out(1.4)" }, 4.6);
         tl.to("#s2 .line.sm", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.85);
         tl.to("#s2 .hero", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 5.5);
-
         transition(7.5, "#s2", "#s3", "#f5f5f2");
 
-        /* ================= SCENE 3 — VO 7.84–12.54 ================= */
+        /* SCENE 3 — VO 7.84–12.54 */
         kenBurns("#s3", 7.78, 5.0);
         tagIn("#s3", 7.95);
         tl.to("#s3 .line.sm", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 8.3);
         tl.to("#s3 .hero", { opacity: 1, scale: 1, duration: 0.72, ease: "back.out(1.6)" }, 8.9);
         tl.to("#s3 .line.muted", { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 10.6);
-
         transition(12.65, "#s3", "#s4", "#ff3b30");
 
-        /* ================= SCENE 4 — VO 12.99–19.00 ================= */
+        /* SCENE 4 — VO 12.99–19.00 */
         kenBurns("#s4", 12.93, 6.3);
         tagIn("#s4", 13.1);
         tl.to("#s4 .line.sm", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 13.5);
         tl.to("#s4 .hero", { opacity: 1, scale: 1, duration: 0.72, ease: "back.out(1.6)" }, 14.8);
         tl.to("#s4 .line.muted", { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 16.6);
-
         transition(19.1, "#s4", "#s5", "#ffd60a");
 
-        /* ================= SCENE 5 — VO 19.45–27.13 ================= */
+        /* SCENE 5 — VO 19.45–27.13 */
         kenBurns("#s5", 19.38, 8.0);
         tagIn("#s5", 19.55);
         tl.to("#s5 .line:not(.sm)", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 19.9);
         tl.to("#s5 .line.sm", { opacity: 1, y: 0, stagger: 1.9, duration: 0.5, ease: "power2.out" }, 21.5);
         tl.to("#s5 .hero", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)" }, 25.2);
-
         transition(27.25, "#s5", "#s6", "#f5f5f2");
 
-        /* ================= SCENE 6 — VO 27.58–35.26 ================= */
+        /* SCENE 6 — VO 27.58–35.26 */
         kenBurns("#s6", 27.53, 8.0);
         tagIn("#s6", 27.7);
         tl.to("#s6 .line.sm:nth-of-type(2)", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 28.0);
         tl.to("#s6 .line.sm:nth-of-type(3)", { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 31.4);
         tl.to("#s6 .hero", { opacity: 1, scale: 1, duration: 0.74, ease: "back.out(1.6)" }, 32.9);
-
         transition(35.4, "#s6", "#s7", "#ffd60a");
 
-        /* ================= SCENE 7 — VO 35.71–42.64 ================= */
+        /* SCENE 7 — VO 35.71–42.64 */
         tagIn("#s7", 35.85);
         tl.fromTo("#s7 .illo-chess", { scale: 0.8, opacity: 0, y: 20 }, { scale: 1, opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.4)" }, 35.8);
         tl.to("#s7 .line.sm", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 36.6);
         tl.to("#s7 .hero", { opacity: 1, scale: 1, duration: 0.72, ease: "back.out(1.6)" }, 38.7);
         tl.to("#s7 .cta", { opacity: 1, y: 0, duration: 0.7, ease: "back.out(1.8)" }, 40.8);
 
-        /* ---------- outro (exits allowed on final scene) ---------- */
         tl.to("#s7 .content", { y: -26, duration: 1.4, ease: "power2.in" }, 42.3);
         tl.to(".presenter", { opacity: 0, y: 24, duration: 0.8, ease: "power2.in" }, 42.3);
         tl.to(".hud", { opacity: 0, duration: 0.8, ease: "power2.in" }, 42.3);
