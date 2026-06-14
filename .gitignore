@@ -1,0 +1,9 @@
+# Installed HyperFrames agent skills (large; regenerate with: npx skills add heygen-com/hyperframes)
+.agents/
+.claude/
+skills-lock.json
+
+# Node / caches
+node_modules/
+**/.hyperframes/
+*.log

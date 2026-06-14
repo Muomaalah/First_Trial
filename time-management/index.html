@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Time Management — Kinetic Type</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Anton";
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: url("fonts/Anton-Regular.woff2") format("woff2");
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background-color: #0b0b0d;
+        font-family: "Inter", sans-serif;
+        color: #f5f5f2;
+      }
+
+      /* ---------- persistent atmosphere ---------- */
+      #glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1400px;
+        height: 1400px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          circle,
+          rgba(255, 214, 10, 0.16) 0%,
+          rgba(255, 214, 10, 0.05) 35%,
+          rgba(11, 11, 13, 0) 68%
+        );
+        z-index: 0;
+        pointer-events: none;
+      }
+      #grain {
+        position: absolute;
+        inset: 0;
+        z-index: 60;
+        opacity: 0.06;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* ---------- scenes ---------- */
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 110px 150px;
+        z-index: 5;
+        opacity: 0;
+      }
+      #s1 {
+        opacity: 1;
+      }
+      .content {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        max-width: 1620px;
+      }
+
+      .ghost {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        font-family: "Anton", sans-serif;
+        font-size: 540px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+        opacity: 0;
+        z-index: 1;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      .kicker {
+        font-family: "Inter", sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0.42em;
+        text-transform: uppercase;
+        color: #ffd60a;
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      .rule {
+        width: 120px;
+        height: 4px;
+        background: #ffd60a;
+        margin: 6px 0 22px;
+        transform: scaleX(0);
+        transform-origin: center;
+      }
+
+      .line {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 70px;
+        line-height: 1.05;
+        letter-spacing: -0.01em;
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      .line.sm {
+        font-size: 56px;
+        font-weight: 600;
+      }
+      .line.muted {
+        color: #9a9aa0;
+        font-weight: 600;
+      }
+      .line .strike {
+        position: relative;
+        color: #9a9aa0;
+      }
+      .line .strike::after {
+        content: "";
+        position: absolute;
+        left: -4px;
+        right: -4px;
+        top: 52%;
+        height: 6px;
+        background: #ff3b30;
+        transform: rotate(-2deg);
+      }
+      .line em {
+        font-style: normal;
+        color: #ffd60a;
+      }
+      .line .red {
+        color: #ff3b30;
+        font-style: normal;
+      }
+
+      .hero {
+        font-family: "Anton", sans-serif;
+        font-size: 188px;
+        line-height: 0.92;
+        letter-spacing: 0.005em;
+        text-transform: uppercase;
+        color: #ffd60a;
+        max-width: 1600px;
+        opacity: 0;
+        transform: scale(0.62);
+      }
+      .hero.white {
+        color: #f5f5f2;
+      }
+      .hero.sm {
+        font-size: 150px;
+      }
+
+      .cta {
+        font-family: "Anton", sans-serif;
+        font-size: 150px;
+        line-height: 1;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        color: #f5f5f2;
+        margin-top: 18px;
+        opacity: 0;
+        transform: translateY(46px);
+      }
+      .cta .dot {
+        color: #ffd60a;
+      }
+
+      /* ---------- transition wipe + blackout ---------- */
+      #wipe {
+        position: absolute;
+        inset: 0;
+        background: #ffd60a;
+        z-index: 50;
+        pointer-events: none;
+      }
+      #blackout {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        z-index: 70;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="52"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="glow" data-layout-ignore></div>
+
+      <!-- Scene 1: Hook -->
+      <section id="s1" class="scene">
+        <div class="ghost" data-layout-ignore>TIME</div>
+        <div class="content">
+          <div class="kicker">The Truth About Time</div>
+          <div class="rule"></div>
+          <div class="line sm">You don't have a <span class="strike">time</span> problem.</div>
+          <div class="line sm">You have a&hellip;</div>
+          <div class="hero">Priority<br />Problem.</div>
+        </div>
+      </section>
+
+      <!-- Scene 2: The same 24 hours -->
+      <section id="s2" class="scene">
+        <div class="ghost" data-layout-ignore>24</div>
+        <div class="content">
+          <div class="kicker">Same Clock</div>
+          <div class="rule"></div>
+          <div class="line sm">Everyone gets the same</div>
+          <div class="hero white">24 Hours.</div>
+          <div class="line">So some build <em>empires</em>&hellip;</div>
+          <div class="line muted">while others can't find ten minutes.</div>
+        </div>
+      </section>
+
+      <!-- Scene 3: Spent, not managed -->
+      <section id="s3" class="scene">
+        <div class="ghost" data-layout-ignore>SPENT</div>
+        <div class="content">
+          <div class="kicker">The Hard Truth</div>
+          <div class="rule"></div>
+          <div class="line sm">Time isn't <span class="strike">managed</span>.</div>
+          <div class="hero">It's Spent.</div>
+          <div class="line muted">And most of us spend it on autopilot.</div>
+        </div>
+      </section>
+
+      <!-- Scene 4: Every trade -->
+      <section id="s4" class="scene">
+        <div class="ghost" data-layout-ignore>TRADE</div>
+        <div class="content">
+          <div class="kicker">Everything Costs</div>
+          <div class="rule"></div>
+          <div class="line">Every <em>yes</em> is a <span class="red">no</span>.</div>
+          <div class="line sm">Every scroll is a trade.</div>
+          <div class="line sm">You're always paying&mdash;</div>
+          <div class="hero">For What?</div>
+        </div>
+      </section>
+
+      <!-- Scene 5: Protect -->
+      <section id="s5" class="scene">
+        <div class="ghost" data-layout-ignore>GUARD</div>
+        <div class="content">
+          <div class="kicker">The Shift</div>
+          <div class="rule"></div>
+          <div class="line sm">Stop trying to do <span class="strike">more</span>.</div>
+          <div class="line sm">Start protecting</div>
+          <div class="hero">What Matters.</div>
+        </div>
+      </section>
+
+      <!-- Scene 6: The one currency -->
+      <section id="s6" class="scene">
+        <div class="ghost" data-layout-ignore>FOREVER</div>
+        <div class="content">
+          <div class="kicker">The One Currency</div>
+          <div class="rule"></div>
+          <div class="line sm">Guard your hours like the one currency you can</div>
+          <div class="hero white">Never Earn Back.</div>
+          <div class="line">Because <em>they are.</em></div>
+        </div>
+      </section>
+
+      <!-- Scene 7: Close -->
+      <section id="s7" class="scene">
+        <div class="ghost" data-layout-ignore>COUNT</div>
+        <div class="content">
+          <div class="kicker">Time Management</div>
+          <div class="rule"></div>
+          <div class="line sm">Make the few things that count&hellip;</div>
+          <div class="hero">Count.</div>
+          <div class="cta">Your move<span class="dot">.</span></div>
+        </div>
+      </section>
+
+      <!-- transition layers -->
+      <div id="wipe" data-layout-ignore></div>
+      <div id="blackout" data-layout-ignore></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* ---------- persistent atmosphere ---------- */
+      tl.to("#glow", { scale: 1.16, duration: 26, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0);
+
+      /* ---------- transition helper ---------- */
+      // Wipes a colored panel left-to-right, swapping the visible scene while covered.
+      function transition(t, fromSel, toSel, color) {
+        tl.fromTo(
+          "#wipe",
+          { xPercent: -100, backgroundColor: color },
+          { xPercent: 0, duration: 0.28, ease: "power3.in", overwrite: "auto" },
+          t,
+        );
+        tl.set(fromSel, { opacity: 0 }, t + 0.28);
+        tl.set(toSel, { opacity: 1 }, t + 0.28);
+        tl.to("#wipe", { xPercent: 100, duration: 0.34, ease: "power3.out", overwrite: "auto" }, t + 0.3);
+      }
+
+      /* ---------- common scene framing ---------- */
+      function frame(id, t) {
+        tl.to(`${id} .kicker`, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t);
+        tl.to(`${id} .rule`, { scaleX: 1, duration: 0.55, ease: "power2.out" }, t + 0.12);
+        tl.to(`${id} .ghost`, { opacity: 0.07, scale: 1.1, duration: 6.4, ease: "sine.out" }, t);
+      }
+
+      /* ================= SCENE 1 (0.0 – 6.8) ================= */
+      frame("#s1", 0.3);
+      tl.to("#s1 .line.sm", { opacity: 1, y: 0, stagger: 0.45, duration: 0.55, ease: "power3.out" }, 0.7);
+      tl.to("#s1 .hero", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 1.7);
+
+      transition(6.8, "#s1", "#s2", "#ffd60a");
+
+      /* ================= SCENE 2 (7.1 – 14.2) ================= */
+      frame("#s2", 7.4);
+      tl.to("#s2 .line.sm", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 7.8);
+      tl.to("#s2 .hero", { opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }, 8.2);
+      tl.to("#s2 .line:not(.sm):not(.muted)", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 8.9);
+      tl.to("#s2 .line.muted", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 9.4);
+
+      transition(14.2, "#s2", "#s3", "#f5f5f2");
+
+      /* ================= SCENE 3 (14.5 – 21.6) ================= */
+      frame("#s3", 14.8);
+      tl.to("#s3 .line.sm", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 15.2);
+      tl.to("#s3 .hero", { opacity: 1, scale: 1, duration: 0.72, ease: "back.out(1.6)" }, 15.7);
+      tl.to("#s3 .line.muted", { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 16.5);
+
+      transition(21.6, "#s3", "#s4", "#ff3b30");
+
+      /* ================= SCENE 4 (21.9 – 29.0) ================= */
+      frame("#s4", 22.1);
+      tl.to("#s4 .line:not(.sm)", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 22.5);
+      tl.to("#s4 .line.sm", { opacity: 1, y: 0, stagger: 0.4, duration: 0.45, ease: "power2.out" }, 23.1);
+      tl.to("#s4 .hero", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)" }, 24.0);
+
+      transition(29.0, "#s4", "#s5", "#ffd60a");
+
+      /* ================= SCENE 5 (29.3 – 36.4) ================= */
+      frame("#s5", 29.6);
+      tl.to("#s5 .line.sm", { opacity: 1, y: 0, stagger: 0.45, duration: 0.5, ease: "power3.out" }, 30.0);
+      tl.to("#s5 .hero", { opacity: 1, scale: 1, duration: 0.72, ease: "back.out(1.6)" }, 30.9);
+
+      transition(36.4, "#s5", "#s6", "#f5f5f2");
+
+      /* ================= SCENE 6 (36.7 – 43.8) ================= */
+      frame("#s6", 36.9);
+      tl.to("#s6 .line.sm", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 37.3);
+      tl.to("#s6 .hero", { opacity: 1, scale: 1, duration: 0.74, ease: "expo.out" }, 38.0);
+      tl.to("#s6 .line:not(.sm)", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 38.9);
+
+      transition(43.8, "#s6", "#s7", "#ffd60a");
+
+      /* ================= SCENE 7 (44.1 – 52.0) ================= */
+      frame("#s7", 44.3);
+      tl.to("#s7 .line.sm", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 44.7);
+      tl.to("#s7 .hero", { opacity: 1, scale: 1, duration: 0.72, ease: "back.out(1.6)" }, 45.2);
+      tl.to("#s7 .cta", { opacity: 1, y: 0, duration: 0.7, ease: "back.out(1.8)" }, 46.4);
+
+      /* ---------- final fade (exit allowed on last scene) ---------- */
+      tl.to("#s7 .content", { y: -30, duration: 1.2, ease: "power2.in" }, 50.2);
+      tl.to("#blackout", { opacity: 1, duration: 1.2, ease: "power2.in" }, 50.4);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
